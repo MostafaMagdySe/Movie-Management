@@ -1,6 +1,6 @@
 package com.movies_management.Services;
 
-import com.movies_management.DTO.MovieNameRequest;
+
 import com.movies_management.DTO.OmdbApi.MainRequestOfOmdb;
 import com.movies_management.DTO.OmdbApi.RatingDTO;
 import com.movies_management.Entities.Movies;
@@ -26,18 +26,25 @@ public class MovieService {
 
     }
     // resposible for getting movie details from the omdbApi and save it to omdbtodb object
-    public  MainRequestOfOmdb gettingMovieDetails(MovieNameRequest movie){
-     MainRequestOfOmdb omdbtodb= omdbApiService.getMovieDetails(movie.getTitle());
+    public  MainRequestOfOmdb gettingMovieDetails(String movieName){
+     MainRequestOfOmdb omdbtodb= omdbApiService.getMovieDetails(movieName);
     return omdbtodb;
     }
 
     // Checks if movie exists in omdbApi in order not to save bad movie details in database
-     public Boolean checkIfMovieExist(MainRequestOfOmdb omdbtodb,MovieNameRequest movie){
+     public Boolean checkIfMovieExistInOmdb(MainRequestOfOmdb omdbtodb){
 
          if (omdbtodb== null || omdbtodb.getTitle()== null || omdbtodb.getYear()==null|| omdbtodb.getResponse()!=true ){return false;}
          return true;
 
      }
+    public Boolean checkIfMovieExistInDB(String title){
+return movierepo.existsByTitle(title);
+
+    }
+
+
+
     @Transactional
     public void replaceNullValues(Movies movie) {
         Field[] fields = Movies.class.getDeclaredFields();
@@ -61,7 +68,7 @@ public class MovieService {
 
     // this method is responsible for getting movie's details from the omdb Api and then save the details to database
     @Transactional
-public void addMovies(MainRequestOfOmdb omdbtodb,MovieNameRequest movie){
+public void addMovies(MainRequestOfOmdb omdbtodb){
     Movies movieEntity = new Movies();
 
     movieEntity.setTitle(omdbtodb.getTitle());
@@ -106,6 +113,8 @@ public void addMovies(MainRequestOfOmdb omdbtodb,MovieNameRequest movie){
 
 
  }
+
+
 
 
 

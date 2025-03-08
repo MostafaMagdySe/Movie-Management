@@ -22,4 +22,7 @@ public interface MoviesInsideWebsiteRepo extends JpaRepository<Movies,Integer> {
 
     @Query("SELECT m FROM Movies m WHERE m.Title = :title")
     Movies findByTitle(@Param("title") String title);
+    @Query("SELECT COUNT(m) > 0 FROM Movies m WHERE LOWER(m.Title) = LOWER(:title)")
+
+    boolean existsByTitle(@Param("title")String title);
 }
