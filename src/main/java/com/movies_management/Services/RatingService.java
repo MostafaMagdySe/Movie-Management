@@ -20,14 +20,19 @@ public class RatingService {
         this.ratingRepo=ratingRepo;
 
     }
-@Transactional
-    public void rateMovie(RatingMovieRequest ratingMovieRequest){
 
+
+    public Users getUserInfo(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserRoles userRoles = (UserRoles) auth.getPrincipal();
         String username = userRoles.getUsername();
+        return userRepo.findByusername(username);
 
-        Users user = userRepo.findByusername(username);
+    }
+@Transactional
+    public void rateMovie(RatingMovieRequest ratingMovieRequest){
+        Users user= getUserInfo();
+
         Rating ratingEntity = new Rating();
         ratingEntity.setUser_id(user.getId());
         ratingEntity.setRating(ratingMovieRequest.getRating());
@@ -35,6 +40,22 @@ public class RatingService {
         ratingEntity.setMovie_id(ratingMovieRequest.getMovie_id());
 
         ratingRepo.save(ratingEntity);
+
+    }
+    public Boolean checkifUserRated(RatingMovieRequest ratingMovieRequest){
+        Users user =getUserInfo();
+        return ratingRepo.existsByUserIdAndMovieId(user.getId(), ratingMovieRequest.getMovie_id());
+
+
+
+    }
+
+    public void deleteRating(RatingMovieRequest ratingMovieRequest){
+        if (checkifUserRated(ratingMovieRequest)){
+            Users user =getUserInfo();
+     Rating ratingEntity = ratingRepo.findByUserIdAndMovieId(user.getId(),ratingMovieRequest.getMovie_id() );
+            ratingRepo.delete(ratingEntity);
+        }
 
     }
 
