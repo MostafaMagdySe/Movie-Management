@@ -1,7 +1,7 @@
 package com.movies_management.Services;
 
 
-import com.movies_management.DTO.OmdbApi.MainRequestOfOmdb;
+import com.movies_management.DTO.OmdbApi.MainResponseOfOmdb;
 import com.movies_management.DTO.OmdbApi.RatingDTO;
 import com.movies_management.Entities.Movies;
 import com.movies_management.Repository.MoviesInsideWebsiteRepo;
@@ -26,13 +26,13 @@ public class MovieService {
 
     }
     // resposible for getting movie details from the omdbApi and save it to omdbtodb object
-    public  MainRequestOfOmdb gettingMovieDetails(String movieName){
-     MainRequestOfOmdb omdbtodb= omdbApiService.getMovieDetails(movieName);
+    public MainResponseOfOmdb gettingMovieDetails(String movieName){
+     MainResponseOfOmdb omdbtodb= omdbApiService.getMovieDetails(movieName);
     return omdbtodb;
     }
 
     // Checks if movie exists in omdbApi in order not to save bad movie details in database
-     public Boolean checkIfMovieExistInOmdb(MainRequestOfOmdb omdbtodb){
+     public Boolean checkIfMovieExistInOmdb(MainResponseOfOmdb omdbtodb){
 
          if (omdbtodb== null || omdbtodb.getTitle()== null || omdbtodb.getYear()==null|| omdbtodb.getResponse()!=true ){return false;}
          return true;
@@ -68,7 +68,7 @@ return movierepo.existsByTitle(title);
 
     // this method is responsible for getting movie's details from the omdb Api and then save the details to database
     @Transactional
-public void addMovies(MainRequestOfOmdb omdbtodb){
+public void addMovies(MainResponseOfOmdb omdbtodb){
     Movies movieEntity = new Movies();
 
     movieEntity.setTitle(omdbtodb.getTitle());

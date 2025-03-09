@@ -3,7 +3,7 @@ package com.movies_management.Controller;
 
 
 
-import com.movies_management.DTO.OmdbApi.MainRequestOfOmdb;
+import com.movies_management.DTO.OmdbApi.MainResponseOfOmdb;
 import com.movies_management.Services.OmdbApiService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +20,7 @@ public class OmdbController {
     }
 
    @GetMapping("/movieDetails/{title}")
-  public MainRequestOfOmdb getMovieDetails(@PathVariable String title) {
+  public MainResponseOfOmdb getMovieDetails(@PathVariable String title) {
       return omdbApiService.getMovieDetails(title);
 
 

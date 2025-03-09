@@ -1,8 +1,8 @@
 package com.movies_management.Services;
 
-import com.movies_management.DTO.CreateUserRequest;
+import com.movies_management.DTO.CreateUserResponse;
 import com.movies_management.DTO.UsernameRequest;
-import com.movies_management.DTO.loginRequest;
+import com.movies_management.DTO.LoginRequest;
 import com.movies_management.Entities.Users;
 import com.movies_management.Repository.UserRepo;
 import lombok.Data;
@@ -33,18 +33,18 @@ public class UserService {
 
     }
     @Transactional
-    public void CreateUser (CreateUserRequest createUserRequest){
+    public void CreateUser (CreateUserResponse createUserResponse){
         Users user = new Users() ;
-        user.setUsername(createUserRequest.getUsername());
-        user.setPassword(encoder.encode(createUserRequest.getPassword()));
-        user.setEmail(createUserRequest.getEmail());
-        user.setPhone(createUserRequest.getPhone());
+        user.setUsername(createUserResponse.getUsername());
+        user.setPassword(encoder.encode(createUserResponse.getPassword()));
+        user.setEmail(createUserResponse.getEmail());
+        user.setPhone(createUserResponse.getPhone());
         userRepo.save(user);
 
 
 
     }
-    public String verify(loginRequest loginrequest) {
+    public String verify(LoginRequest loginrequest) {
 
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginrequest.getUsername(), loginrequest.getPassword()));

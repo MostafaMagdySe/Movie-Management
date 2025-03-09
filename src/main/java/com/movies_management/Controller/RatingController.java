@@ -1,6 +1,6 @@
 package com.movies_management.Controller;
 
-import com.movies_management.DTO.RatingMovieRequest;
+import com.movies_management.DTO.RatingMovieResponse;
 
 import com.movies_management.Services.RatingService;
 import org.springframework.http.HttpStatus;
@@ -23,19 +23,19 @@ public RatingController(RatingService ratingService){
 
 
     @PostMapping("/rateMovie")
-    public ResponseEntity<String> addRating (@RequestBody RatingMovieRequest ratingMovieRequest){
+    public ResponseEntity<String> addRating (@RequestBody RatingMovieResponse ratingMovieResponse){
 
-       if (ratingService.checkifUserRated(ratingMovieRequest)){
+       if (ratingService.checkifUserRated(ratingMovieResponse)){
            return new ResponseEntity<>("this user already rated this movie",HttpStatus.BAD_REQUEST);
        }
-       else if(!ratingService.checkIfMovieExist(ratingMovieRequest.getMovie_id())){
+       else if(!ratingService.checkIfMovieExist(ratingMovieResponse.getMovie_id())){
         return new ResponseEntity<>("You CANNOT Rate a Movie that doesn't exist",HttpStatus.BAD_REQUEST);
 
        }
        else{
 
 
-ratingService.rateMovie(ratingMovieRequest);
+ratingService.rateMovie(ratingMovieResponse);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
@@ -44,10 +44,10 @@ ratingService.rateMovie(ratingMovieRequest);
 }
 
     @DeleteMapping("/deleteMovieRating")
-    public ResponseEntity<String> deleteRating (@RequestBody RatingMovieRequest ratingMovieRequest){
-        if (ratingService.checkifUserRated(ratingMovieRequest)){
+    public ResponseEntity<String> deleteRating (@RequestBody RatingMovieResponse ratingMovieResponse){
+        if (ratingService.checkifUserRated(ratingMovieResponse)){
 
-        ratingService.deleteRating(ratingMovieRequest);
+        ratingService.deleteRating(ratingMovieResponse);
         return new ResponseEntity<>("Successfully Deleted the Rating",HttpStatus.OK);
     }
         else return new ResponseEntity<>("This User Haven't Rated this Movie yet",HttpStatus.BAD_REQUEST);

@@ -1,7 +1,7 @@
 package com.movies_management.Services;
 
 import com.movies_management.Config.UserRoles;
-import com.movies_management.DTO.RatingMovieRequest;
+import com.movies_management.DTO.RatingMovieResponse;
 import com.movies_management.Entities.Rating;
 import com.movies_management.Entities.Users;
 import com.movies_management.Repository.MoviesInsideWebsiteRepo;
@@ -33,30 +33,30 @@ public class RatingService {
 
     }
 @Transactional
-    public void rateMovie(RatingMovieRequest ratingMovieRequest){
+    public void rateMovie(RatingMovieResponse ratingMovieResponse){
         Users user= getUserInfo();
 
         Rating ratingEntity = new Rating();
         ratingEntity.setUser_id(user.getId());
-        ratingEntity.setRating(ratingMovieRequest.getRating());
-        ratingEntity.setComment(ratingMovieRequest.getComment());
-        ratingEntity.setMovie_id(ratingMovieRequest.getMovie_id());
+        ratingEntity.setRating(ratingMovieResponse.getRating());
+        ratingEntity.setComment(ratingMovieResponse.getComment());
+        ratingEntity.setMovie_id(ratingMovieResponse.getMovie_id());
 
         ratingRepo.save(ratingEntity);
 
     }
-    public boolean checkifUserRated(RatingMovieRequest ratingMovieRequest){
+    public boolean checkifUserRated(RatingMovieResponse ratingMovieResponse){
         Users user =getUserInfo();
-        return ratingRepo.existsByUserIdAndMovieId(user.getId(), ratingMovieRequest.getMovie_id());
+        return ratingRepo.existsByUserIdAndMovieId(user.getId(), ratingMovieResponse.getMovie_id());
 
 
 
     }
 
-    public void deleteRating(RatingMovieRequest ratingMovieRequest){
-        if (checkifUserRated(ratingMovieRequest)){
+    public void deleteRating(RatingMovieResponse ratingMovieResponse){
+        if (checkifUserRated(ratingMovieResponse)){
             Users user =getUserInfo();
-     Rating ratingEntity = ratingRepo.findByUserIdAndMovieId(user.getId(),ratingMovieRequest.getMovie_id() );
+     Rating ratingEntity = ratingRepo.findByUserIdAndMovieId(user.getId(), ratingMovieResponse.getMovie_id() );
             ratingRepo.delete(ratingEntity);
         }
 

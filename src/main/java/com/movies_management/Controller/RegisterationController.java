@@ -2,7 +2,7 @@ package com.movies_management.Controller;
 
 
 
-import com.movies_management.DTO.CreateUserRequest;
+import com.movies_management.DTO.CreateUserResponse;
 import com.movies_management.Services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +23,10 @@ public class RegisterationController {
 
 
     @PostMapping("/register")
-    public ResponseEntity CreateUsers (@RequestBody CreateUserRequest createUserRequest){
+    public ResponseEntity CreateUsers (@RequestBody CreateUserResponse createUserResponse){
 
 
-        userService.CreateUser(createUserRequest);
+        userService.CreateUser(createUserResponse);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

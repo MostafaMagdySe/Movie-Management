@@ -38,16 +38,17 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for testing (not recommended in production)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(
-                                "/v3/api-docs/**", // OpenAPI documentation
-                                "/swagger-ui/**", // Swagger UI resources
-                                "/swagger-ui.html", // Swagger UI HTML
-                                "/register", // Your public endpoint
+                                 // OpenAPI documentation
+                                 // Swagger UI resources
+                                 // Swagger UI HTML
+                                "/register", //
                                 "/login",
                                 "/ResetPassword",
                                 "/verifyCode",
                                 "/UpdatePassword",
                                 "/quote"
-                        ).permitAll() // Allow unauthenticated access to /register
+                        ).permitAll()
+                        .requestMatchers("/movieInsertion/**", "movieDeletion/**","/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").hasRole("Admin")
                         .anyRequest().authenticated()) // Require authentication for other endpoints
                 .httpBasic(Customizer.withDefaults()) // Enable Basic Authentication
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)) // session to maintain the logged-in state

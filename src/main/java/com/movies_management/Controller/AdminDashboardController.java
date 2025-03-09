@@ -2,7 +2,7 @@ package com.movies_management.Controller;
 
 import com.movies_management.DTO.ListOfMovieRequest;
 
-import com.movies_management.DTO.OmdbApi.MainRequestOfOmdb;
+import com.movies_management.DTO.OmdbApi.MainResponseOfOmdb;
 
 import com.movies_management.Services.MovieService;
 import jakarta.validation.Valid;
@@ -25,12 +25,12 @@ public class AdminDashboardController {
 
     }
 
-    @PostMapping("/addmovie")
+    @PostMapping("/movieInsertion")
     public ResponseEntity<String> addMovies( @Valid @RequestBody ListOfMovieRequest movieList) {
         StringBuilder responseMessage = new StringBuilder();
         for (String i : movieList.getTitles()) {
             if(!movieService.checkIfMovieExistInDB(i)){
-            MainRequestOfOmdb omdbtodb = movieService.gettingMovieDetails(i);
+            MainResponseOfOmdb omdbtodb = movieService.gettingMovieDetails(i);
            if (!movieService.checkIfMovieExistInOmdb(omdbtodb)) {
                 responseMessage.append("Movie \"").append(i).append("\" isn't Found on Omdb Api").append("\n");
             }
@@ -50,7 +50,7 @@ public class AdminDashboardController {
         return new ResponseEntity<>(responseMessage.toString(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/deleteMovie")
+    @DeleteMapping("/movieDeletion")
     public ResponseEntity<String> deleteMovies(@RequestBody ListOfMovieRequest movieList) {
         StringBuilder responseMessage = new StringBuilder();
         for (String i : movieList.getTitles()) {

@@ -2,7 +2,7 @@ package com.movies_management.Controller;
 
 
 import com.movies_management.DTO.UsernameRequest;
-import com.movies_management.DTO.loginRequest;
+import com.movies_management.DTO.LoginRequest;
 import com.movies_management.Entities.MovieInfo;
 import com.movies_management.Services.DashboardService;
 import com.movies_management.Services.UserService;
@@ -56,7 +56,7 @@ public ResponseEntity<Map<String, Object>> viewMovie(@PathVariable String name){
 
     }
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody loginRequest loginrequest ) {
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginrequest ) {
 
         return ResponseEntity.ok(userService.verify(loginrequest));
     }

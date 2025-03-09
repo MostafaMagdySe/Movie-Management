@@ -1,8 +1,7 @@
 package com.movies_management.Config;
 
-
-
 import com.movies_management.Entities.Users;
+import com.movies_management.Repository.RolesRepo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,15 +10,17 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class UserRoles implements UserDetails {
-    private Users user;
+    private final Users user;
+    private final String roleName;
 
-    public UserRoles (Users user) {
+    public UserRoles(Users user, RolesRepo rolesRepo) {
         this.user = user;
+        this.roleName = rolesRepo.findRoleNameById(user.getRoleId()); // Fetch role during object creation
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("USER"));
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + roleName));
     }
 
     @Override
@@ -29,7 +30,7 @@ public class UserRoles implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername() ;
+        return user.getUsername();
     }
 
     @Override

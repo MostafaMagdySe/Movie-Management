@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 
-public class CreateUserRequest {
+public class CreateUserResponse {
     private int id;
     @NotNull
     private String username;

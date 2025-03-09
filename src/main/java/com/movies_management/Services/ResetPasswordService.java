@@ -2,9 +2,9 @@ package com.movies_management.Services;
 
 
 
-import com.movies_management.DTO.emailRequest;
+import com.movies_management.DTO.EmailResponse;
 import com.movies_management.DTO.UserNewPasswordRequest;
-import com.movies_management.Entities.resetpassword;
+import com.movies_management.Entities.ResetPassword;
 import com.movies_management.Entities.Users;
 import com.movies_management.Repository.ResetPasswordRepo;
 import com.movies_management.Repository.UserRepo;
@@ -29,15 +29,15 @@ public class ResetPasswordService {
         this.resetPasswordRepo = resetPasswordRepo;
     }
 
-    public Boolean verifyEmail (emailRequest emailRequest){
-        return userRepo.findByemail(emailRequest.getEmail()) != null;
+    public Boolean verifyEmail (EmailResponse emailResponse){
+        return userRepo.findByemail(emailResponse.getEmail()) != null;
     }
 
     //@EventListener(ApplicationReadyEvent.class)
     @Transactional
-    public void sendmail(emailRequest emailRequest){
-        resetpassword resetPassword = resetPasswordRepo.findByemail(emailRequest.getEmail());
-        emailSenderService.SendEmail(emailRequest.getEmail(),
+    public void sendmail(EmailResponse emailResponse){
+        ResetPassword resetPassword = resetPasswordRepo.findByemail(emailResponse.getEmail());
+        emailSenderService.SendEmail(emailResponse.getEmail(),
                 "Don't reply to this Message",
                 "you have Requested to reset Your password on our Notes Website.." +
                         " if you didn't ask for Resetting Password, ignore this Message," +
@@ -46,9 +46,9 @@ public class ResetPasswordService {
 
     }
     @Transactional
-    public void saveEmailAndCodeinDB (emailRequest emailRequest){
-        resetpassword resetPass = new resetpassword();
-        resetPass.setEmail(emailRequest.getEmail());
+    public void saveEmailAndCodeinDB (EmailResponse emailResponse){
+        ResetPassword resetPass = new ResetPassword();
+        resetPass.setEmail(emailResponse.getEmail());
         resetPass.setCode(generateVerificationCode());
         resetPasswordRepo.save(resetPass);
     }
@@ -58,7 +58,7 @@ public class ResetPasswordService {
     }
     public boolean verifyCode(String email, String userProvidedCode) {
 
-        resetpassword resetPassword = resetPasswordRepo.findByemail(email);
+        ResetPassword resetPassword = resetPasswordRepo.findByemail(email);
 
         return resetPassword.getCode().equals(userProvidedCode);
 

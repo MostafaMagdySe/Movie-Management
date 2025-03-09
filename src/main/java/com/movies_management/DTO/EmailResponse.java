@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class emailRequest {
+public class EmailResponse {
     @NotNull @Email
     private String email;
 

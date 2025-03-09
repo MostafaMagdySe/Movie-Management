@@ -1,9 +1,6 @@
 package com.movies_management.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -26,6 +23,7 @@ public class Users {
 
     private String phone;
 
-    private Integer role_id;
+    @Column(name="role_id")
+    private Integer roleId;
 
 }

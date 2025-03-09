@@ -2,7 +2,7 @@ package com.movies_management.Services;
 
 
 
-import com.movies_management.DTO.OmdbApi.MainRequestOfOmdb;
+import com.movies_management.DTO.OmdbApi.MainResponseOfOmdb;
 
 import com.movies_management.feign.OmdbApi;
 
@@ -21,7 +21,7 @@ public class OmdbApiService {
         this.omdbApi=omdbApi;
     }
 
-    public MainRequestOfOmdb getMovieDetails(String title) {
+    public MainResponseOfOmdb getMovieDetails(String title) {
         return omdbApi.getMovieDetails(apikey,title);
 
 

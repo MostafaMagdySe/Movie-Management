@@ -2,9 +2,9 @@ package com.movies_management.Controller;
 
 
 
-import com.movies_management.DTO.emailRequest;
+import com.movies_management.DTO.EmailResponse;
 import com.movies_management.DTO.UserNewPasswordRequest;
-import com.movies_management.DTO.UserProvidedcodeRequest;
+import com.movies_management.DTO.UserProvidedcodeResponse;
 import com.movies_management.Services.ResetPasswordService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +22,10 @@ public class ForgotPasswordController {
     }
 
     @PostMapping("/ResetPassword")
-    public ResponseEntity ResetPassword(@RequestBody emailRequest emailRequest) {
-        if (resetPasswordService.verifyEmail(emailRequest)) {
-            resetPasswordService.saveEmailAndCodeinDB(emailRequest);
-            resetPasswordService.sendmail(emailRequest);
+    public ResponseEntity ResetPassword(@RequestBody EmailResponse emailResponse) {
+        if (resetPasswordService.verifyEmail(emailResponse)) {
+            resetPasswordService.saveEmailAndCodeinDB(emailResponse);
+            resetPasswordService.sendmail(emailResponse);
             return new ResponseEntity<>(HttpStatus.FOUND);
         }
         else
@@ -33,8 +33,8 @@ public class ForgotPasswordController {
 
     }
     @PostMapping("/verifyCode")
-    public ResponseEntity verifyCode(@RequestParam String email, @RequestBody UserProvidedcodeRequest userProvidedcodeRequest) {
-        if(resetPasswordService.verifyCode(email, userProvidedcodeRequest.getCode())){
+    public ResponseEntity verifyCode(@RequestParam String email, @RequestBody UserProvidedcodeResponse userProvidedcodeResponse) {
+        if(resetPasswordService.verifyCode(email, userProvidedcodeResponse.getCode())){
 
             return new ResponseEntity<>(HttpStatus.OK);
         }

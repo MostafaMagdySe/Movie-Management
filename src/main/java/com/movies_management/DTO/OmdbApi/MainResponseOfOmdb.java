@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class MainRequestOfOmdb {
+public class MainResponseOfOmdb {
 
     @JsonProperty("Title")
     private String title;
