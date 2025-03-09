@@ -1,6 +1,7 @@
 package com.movies_management.Controller;
 
 import com.movies_management.DTO.RatingMovieRequest;
+
 import com.movies_management.Services.RatingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class RatingController {
 private final RatingService ratingService;
 
+
 public RatingController(RatingService ratingService){
     this.ratingService=ratingService;
+
 
 }
 
@@ -25,14 +28,23 @@ public RatingController(RatingService ratingService){
        if (ratingService.checkifUserRated(ratingMovieRequest)){
            return new ResponseEntity<>("this user already rated this movie",HttpStatus.BAD_REQUEST);
        }
+       else if(!ratingService.checkIfMovieExist(ratingMovieRequest.getMovie_id())){
+        return new ResponseEntity<>("You CANNOT Rate a Movie that doesn't exist",HttpStatus.BAD_REQUEST);
+
+       }
        else{
+
+
 ratingService.rateMovie(ratingMovieRequest);
         return new ResponseEntity<>(HttpStatus.OK);
 
-    }}
+    }
+
+
+}
 
     @DeleteMapping("/deleteMovieRating")
-public ResponseEntity<String> deleteRating (@RequestBody RatingMovieRequest ratingMovieRequest){
+    public ResponseEntity<String> deleteRating (@RequestBody RatingMovieRequest ratingMovieRequest){
         if (ratingService.checkifUserRated(ratingMovieRequest)){
 
         ratingService.deleteRating(ratingMovieRequest);

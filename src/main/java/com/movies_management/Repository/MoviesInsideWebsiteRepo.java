@@ -25,4 +25,8 @@ public interface MoviesInsideWebsiteRepo extends JpaRepository<Movies,Integer> {
     @Query("SELECT COUNT(m) > 0 FROM Movies m WHERE LOWER(m.Title) = LOWER(:title)")
 
     boolean existsByTitle(@Param("title")String title);
+
+    boolean existsById(int id);
+
 }
+

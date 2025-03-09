@@ -31,17 +31,19 @@ public class AdminDashboardController {
         for (String i : movieList.getTitles()) {
             if(!movieService.checkIfMovieExistInDB(i)){
             MainRequestOfOmdb omdbtodb = movieService.gettingMovieDetails(i);
-            if (!movieService.checkIfMovieExistInOmdb(omdbtodb)) {
+           if (!movieService.checkIfMovieExistInOmdb(omdbtodb)) {
                 responseMessage.append("Movie \"").append(i).append("\" isn't Found on Omdb Api").append("\n");
-            } else {
+            }
+           else if(!i.equals(omdbtodb.getTitle())){
+               responseMessage.append("Movie mismatch! Movie \"").append(i).append("\" isn't matching a movie in Omdb API. Try adding movie \"").append(omdbtodb.getTitle()).append("\" instead.").append("\n");
+           }
+
+           else {
 
                 movieService.addMovies(omdbtodb);
                 responseMessage.append("Successfully added Movie: \"").append(i).append("\"\n");
             }
         }else responseMessage.append("Movie \"").append(i).append("\" is already Stored in the Database").append("\n");
-
-
-
 
         }
 

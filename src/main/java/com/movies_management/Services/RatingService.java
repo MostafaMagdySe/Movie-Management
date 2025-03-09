@@ -4,6 +4,7 @@ import com.movies_management.Config.UserRoles;
 import com.movies_management.DTO.RatingMovieRequest;
 import com.movies_management.Entities.Rating;
 import com.movies_management.Entities.Users;
+import com.movies_management.Repository.MoviesInsideWebsiteRepo;
 import com.movies_management.Repository.RatingRepo;
 import com.movies_management.Repository.UserRepo;
 import org.springframework.security.core.Authentication;
@@ -15,9 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class RatingService {
     private final UserRepo userRepo;
     private final RatingRepo ratingRepo;
-    public RatingService(UserRepo userRepo,RatingRepo ratingRepo){
+    private final MoviesInsideWebsiteRepo movieRepo;
+    public RatingService(UserRepo userRepo,RatingRepo ratingRepo,MoviesInsideWebsiteRepo movieRepo){
         this.userRepo=userRepo;
         this.ratingRepo=ratingRepo;
+        this.movieRepo=movieRepo;
 
     }
 
@@ -42,7 +45,7 @@ public class RatingService {
         ratingRepo.save(ratingEntity);
 
     }
-    public Boolean checkifUserRated(RatingMovieRequest ratingMovieRequest){
+    public boolean checkifUserRated(RatingMovieRequest ratingMovieRequest){
         Users user =getUserInfo();
         return ratingRepo.existsByUserIdAndMovieId(user.getId(), ratingMovieRequest.getMovie_id());
 
@@ -56,6 +59,11 @@ public class RatingService {
      Rating ratingEntity = ratingRepo.findByUserIdAndMovieId(user.getId(),ratingMovieRequest.getMovie_id() );
             ratingRepo.delete(ratingEntity);
         }
+
+    }
+
+    public boolean checkIfMovieExist(int id){
+        return movieRepo.existsById(id);
 
     }
 

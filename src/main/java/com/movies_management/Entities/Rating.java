@@ -21,6 +21,7 @@ public class Rating {
     private int rating;
 
     private int user_id;
+
     private int movie_id;
     private String comment;
 

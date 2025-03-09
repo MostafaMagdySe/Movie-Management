@@ -13,11 +13,7 @@ public interface RatingRepo extends JpaRepository<Rating,Integer> {
     Rating findByUserIdAndMovieId(@Param("userId") int userId, @Param("movieId") int movieId);
 
 
-
-
     @Query("SELECT COUNT(r) > 0 FROM Rating r WHERE r.user_id = :userId AND r.movie_id = :movieId")
     boolean existsByUserIdAndMovieId(@Param("userId") int userId, @Param("movieId") int movieId);
-
-
 
 }
