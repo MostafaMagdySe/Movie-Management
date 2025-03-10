@@ -1,27 +1,27 @@
 # Movie-Management
-This Project is an online Movies Management website. it's a place where you can watch Movies online. the only thing it's missing is its content (the movies itself). However, they can be added Later by linking to the media which is hosted on 3rd party services.
+This Project is an online Movies Management website. it's a place where you can watch Movies online. the only thing it's missing is its content (the movies itself). However, they can be added Later by linking the Movies' media to hosted 3rd party services.
 
 ## Features of this Project
 
-1-This Project basicly implements OmdbApi, which fetches Movies info from Imdb Website.. then uses that details for your Website where the Admins of that Website can add movies to let users watch them and instead of manually map the Movie's Details.. it's being done automatically!
+1-This Project basicly implements OmdbApi, which fetches Movies' info from Imdb's Website.. then uses that details in this project where the Admins of the website can add movies to let users watch them. and instead of manually map the Movie's Details.. it's being done Automatically!
 
-2- Also, Improved the OmdbApi way of Working.. for example if you searched for "harry potter".. you didn't specifiy which "harry potter" movie.. there are 8 movies.. in OmdbApi Website, if you searched for that.. you will get a response containing details for "Harry Potter and the Deathly Hallows: Part 2" , so, in this scenario .. you are getting wrong movie details which is considered bad data to data Base.. so, that was stopped in this project, if you tried to add a movie called "harry potter" your request will be rejected and you will get the title for the movie that represents the Title ou entered.
+2- Also, Improved how OmdbApi Works.. for example if you searched for "harry potter".. you didn't specifiy which "harry potter" movie you are looking for.. there are 8 movies in total.. in OmdbApi offical Website, if you searched for "Harry Potter".. you will get a response containing details for "Harry Potter and the Deathly Hallows: Part 2" , so, in this scenario .. you are getting wrong movie details which is considered bad data to data Base.. so, that was stopped in this project, if you tried to add a movie called "harry potter" your request will be rejected and you will get a suggestion of the title for the movie that represents the Title you entered.
 
-This Pic Makes it better for understanding:
+This Pic Makes it better for understanding: [Movie_Mismatch.png](https://www.mediafire.com/view/dtu8cwuftllzwgj)
 
-As you see, you got a mismatch response and it suggests to add the movie that corresponds the name which OmdbApi will give you, but if you tried to add "Harry Potter and the Deathly Hallows: Part 2" it will work normally.
+As you see, you got a mismatch response and it suggests to add the movie that corresponds to the name which OmdbApi will give you, but if you tried to add "Harry Potter and the Deathly Hallows: Part 2" it will work normally.
 
 3-Made the website more user-friendly.. for a user who Heard about a movie and wants to watch it in the website, instead of Having to open the website and search for that movie, the user can just copy the movie's full title from imdb or any other place.. and just paste it in the Website's Url. for example, a user wanted to watch a movie called "Spider-Man: Across the Spider-Verse" .. all the user have to do is hitting the website's url and paste the movie name.. the movie name will be converted making a valid url.
 
-for example: hitting a url like that "http://localhost:8080/Movies/Spider-Man: Across the Spider-Verse" is possible! no need to care about spaces or any other special characters, it will get converted automatically to a valid url.. if the website contains that movie.. the user will see that movie's website.. if not, the user will see a message says that this movie isn't available at the website!
+for example: hitting a url like that "http://localhost:8080/Movies/Spider-Man: Across the Spider-Verse" is possible! no need to care about spaces or any other special characters, it will get converted automatically to a valid url.. if the website contains that movie.. the user will see that movie's details.. if not, the user will see a message says that this movie isn't available at the website yet!
 
 4-Also, the project Have Role-based access control. which means there are two types of users, normal users and admin users. every new registered user will automatically get a role of "User" , the only way to have admin user, is by changing the role of a particual user from the database and to change the password for that user because the password which is stored in the databse is encoded, and it has information about the role of that user.
 
 this way is the best way to have admin user, the admin is a person who has access to modifiy the databse.. also, it's possible to implement a method to make a Super admin who can create other admins.. but it depends on the business logic.. to keep it simple for now, to get admin user, you have to do that manually!
 
-5- Implemented Pagination to make it more user friendly and also not Hammering on the servers by sending a lot of responses the user might not be needed.
+5- Implemented Pagination to make it more user friendly. and also not Hammering on the servers by sending a lot of responses the user might not be needed.
 
-6- Also, Adeed Rating system.. now for each movie.. the user can rate the movie 1-10 and give a review of that movie.. not to Hammer on the website, it was decided that the user cannot modifiy his rating.. but still can delete his rating and add a new rating. and of course the user can rate the single movie one time only.
+6- Also, Adeed Rating system.. now for each movie.. the user can rate the movie from 1-10 and give a review of that movie.. it was decided that the best prctise is that the user cannot modifiy his rating.. but he still can delete his rating and add a new rating. and of course the user can rate the single movie one time only not to Spoil the overall Rating.
 
 7- To Make it easier for Admins, Batch Processing is added, which means Admins can add/remove several movies at once by providing their titles as a list. Also, not to Hammer on the Server, it's only Possible to Add up to 10 Movies at once, if an Admin tried to add more then that in one request, it will get rejected.
 
