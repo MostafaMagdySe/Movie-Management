@@ -84,7 +84,7 @@ as pagination is implemented you will see 5 movies only at once.. to see the fol
 
 4- it's also possible to edit ou profile's details by hitting ("/updateProfile") , i.e. (http://localhost:8080/updateProfile)
 
-##Rating Movies
+## Rating Movies
 
 1- Ever User Has the Ability to rate each movie once per movie, you aren't allowed to rate more than one time. to maintain consistency, users cannot edit their reviews, however, it's possible to delete your rating and rate the movie again!
 
@@ -92,7 +92,7 @@ as pagination is implemented you will see 5 movies only at once.. to see the fol
 
 3- Also, to delete our rating, you should visit ("/deleteMovieRating") , i.e. (http://localhost:8080/deleteMovieRating) and make sure than the request is of tpe delete and provide the movie id.
 
-##Password Reseting
+## Password Reseting
 1- if you had forgotten your password, don't be worried.. it's possible to recover your account back! to do that, you should first vist
 this endpoint: ("/ResetPassword") i.e (http://localhost:8080/ResetPassword) , after that you have to provide your email, and if it's stored inside the databse, the email service will send you a randomly generated verfication code. you to correctl pass it to the next endpoint or you won't be able to retrieve our account back!
 
