@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +29,7 @@ this.userService=userService;
 
     @GetMapping("/")
     public ResponseEntity <List<MovieInfo>> getMovies(@RequestParam(defaultValue = "1") int PageNo,
-                                                      @RequestParam(defaultValue = "1") int PageSize){
+                                                      @RequestParam(defaultValue = "5") int PageSize){
 
         List<MovieInfo> movies=dashboardService.fetchAllMoviesFromDB(PageNo-1,PageSize);
         return new ResponseEntity<>(movies, HttpStatus.OK);
@@ -56,10 +57,15 @@ public ResponseEntity<Map<String, Object>> viewMovie(@PathVariable String name){
 
     }
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginrequest ) {
+    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginRequest loginRequest) {
+        String token = userService.verify(loginRequest);
 
-        return ResponseEntity.ok(userService.verify(loginrequest));
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+
+        return ResponseEntity.ok(response);
     }
+
     @PatchMapping ("/updateProfile")
     public ResponseEntity updateProfile(@RequestBody UsernameRequest username){
 

@@ -1,7 +1,5 @@
 package com.movies_management.Config;
 
-
-
 import com.movies_management.Services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,46 +15,55 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-
     private final JwtFilter jwtFilter;
     private final CustomUserDetailsService customUserDetailsService;
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService, JwtFilter jwtFilter){
-        this.customUserDetailsService= customUserDetailsService;
-        this.jwtFilter=jwtFilter;
-    }
 
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService, JwtFilter jwtFilter) {
+        this.customUserDetailsService = customUserDetailsService;
+        this.jwtFilter = jwtFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         return http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for testing (not recommended in production)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
+                .csrf(csrf -> csrf.disable()) // Disable CSRF (only for testing)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers(
-                                 // OpenAPI documentation
-                                 // Swagger UI resources
-                                 // Swagger UI HTML
-                                "/register", //
-                                "/login",
-                                "/ResetPassword",
-                                "/verifyCode",
-                                "/UpdatePassword",
-                                "/quote"
+                                "/register", "/login", "/ResetPassword", "/verifyCode", "/UpdatePassword", "/quote"
                         ).permitAll()
-                        .requestMatchers("/movieInsertion/**", "movieDeletion/**","/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").hasRole("Admin")
+                        .requestMatchers("/movieInsertion/**", "/movieDeletion/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").hasRole("Admin")
                         .anyRequest().authenticated()) // Require authentication for other endpoints
-                .httpBasic(Customizer.withDefaults()) // Enable Basic Authentication
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)) // session to maintain the logged-in state
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-
-
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(List.of("http://localhost:4200")); // Allow Angular frontend
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setExposedHeaders(List.of("Authorization"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
@@ -67,13 +74,11 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(customUserDetailsService);
-
-
         return provider;
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
-
     }
 }
