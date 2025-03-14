@@ -3,7 +3,7 @@ This Project is an online Movies Management website. it's a place where you can 
 
 ## Features of this Project
 
-1-This Project basicly implements OmdbApi, which fetches Movies' info from Imdb's Website.. then uses that details in this project where the Admins of the website can add movies to let users watch them. and instead of manually map the Movie's Details.. it's being done Automatically!
+1-This Project basicly implements OmdbApi, which fetches Movies' info from Imdb's Website.. then uses that details in this project where the Admins of the website can add movies to let users watch them. and instead of manually mapping the Movie's Details.. it's being done Automatically!
 
 2- Also, Improved how OmdbApi Works.. for example if you searched for "harry potter".. you didn't specifiy which "harry potter" movie you are looking for.. there are 8 movies in total.. in OmdbApi offical Website, if you searched for "Harry Potter".. you will get a response containing details for "Harry Potter and the Deathly Hallows: Part 2" , so, in this scenario .. you are getting wrong movie details which is considered bad data to data Base.. so, that was stopped in this project, if you tried to add a movie called "harry potter" your request will be rejected and you will get a suggestion of the title for the movie that represents the Title you entered.
 
@@ -21,13 +21,15 @@ this way is the best way to have admin user, the admin is a person who has acces
 
 5- Implemented Pagination to make it more user friendly. and also not Hammering on the servers by sending a lot of responses the user might not be needed.
 
-6- Also, Adeed Rating system.. now for each movie.. the user can rate the movie from 1-10 and give a review of that movie.. it was decided that the best prctise is that the user cannot modifiy his rating.. but he still can delete his rating and add a new rating. and of course the user can rate the single movie one time only not to Spoil the overall Rating.
+6- Also, Added Rating system.. now for each movie.. the user can rate the movie from 1-10 and give a review of that movie.. it was decided that the best prctise is that the user cannot modifiy his rating.. but he still can delete his rating and add a new rating. and of course the user can rate the single movie one time only not to Spoil the overall Rating.
 
 7- To Make it easier for Admins, Batch Processing is added, which means Admins can add/remove several movies at once by providing their titles as a list. Also, not to Hammer on the Server, it's only Possible to Add up to 10 Movies at once, if an Admin tried to add more then that in one request, it will get rejected.
 
 8- Also, search is implemented making it possible to search for any movie by title, and return a list of all movies having the same keyword you have searched for.
 
-9- Implemented Global Exception Handler using @ControllerAdvice. so that, the website never get crashed, it will keep working and if something unexpected happened it will shows the erorr message making it easier to know what causes the issue.
+9-Added Swagger UI to Make it Easier to Visualize and test the Endpoints.
+
+10- Implemented Global Exception Handler using @ControllerAdvice. so that, the website never get crashed, it will keep working and if something unexpected happened it will shows the erorr message making it easier to know what causes the issue.
 
 
 ## Prerequisites
@@ -51,9 +53,9 @@ clone the project to your local repository or just download the project to your 
 ### preparing the project
 1- Open pom.xml file in your ide and let maven resolve and download all dependencies if needed.
 
-2- open application.properties and under spring.mail.. put your gmail, and for password, you need to search how to get app password for your gmail and put it there.
+2- open application.properties and under spring.mail.. put your gmail, and for password, you need to search how to get app password for your gmail and put it there. to make it easier, sample email and app password were provided 
 
-3- also, you have to get api key to use th OmdbApi .. after that, in application.properties.. put you ke under omdb.key="your Api key"
+3- also, you have to get api key to use th OmdbApi .. after that, in application.properties.. put your key under omdb.key="your Api key" .. and to make it easier.. a ke was provided so you can get started quickly!
 
 3- Now you are ready to run the project and also make sure that Postgres is running.
 
@@ -64,7 +66,6 @@ clone the project to your local repository or just download the project to your 
 
 3- After registering, hit the login api (eg: http://localhost:8080/login) after providing valid credentials you will get a response containing a token, you can use this token to access the other endpoints.
 
-4-To make it simple, Basic Auth was enabled for Testing Purposes, instead of having to log in to get a token and have to attach this token with every request, basic auth was enabled providing session token, which means if you tried to hit any endpoint a little pop-up windows will show up and asks you to provide your username and password, and if they will correct you will stay logged in for 30min
 
 ## Adding Movies to the database
 1- Make sure you are logged in as Admin User, and Using Post Request, send a list of titles to ("/movieInsertion") endpoint, i.e(localhost:8080/movieInsertion) 
@@ -82,7 +83,7 @@ as pagination is implemented you will see 5 movies only at once.. to see the fol
 
 3- to search for a movie, send a keyword to ("/search") endpoint, i.e: (http://localhost:8080/Movies/search)
 
-4- it's also possible to edit ou profile's details by hitting ("/updateProfile") , i.e. (http://localhost:8080/updateProfile)
+4- it's also possible to edit your profile's details by hitting ("/updateProfile") , i.e. (http://localhost:8080/updateProfile)
 
 ## Rating Movies
 
@@ -99,6 +100,8 @@ this endpoint: ("/ResetPassword") i.e (http://localhost:8080/ResetPassword) , af
 2- After Getting the verfication Code, you should visit ("/verifyCode") , i.e" (http://localhost:8080/verifyCode) , where ou will be asked to provide our verification code, if it is correct, you should be proceed to change your password
 
 3-to change your password you should hit ("/UpdatePassword") i.e. (http://localhost:8080/UpdatePassword), where you will provide your new password!
+## Swagger UI
+if you are familiar with Testing your project and add documentation for the project.. swagger is embedded to the project.
 
 
 
