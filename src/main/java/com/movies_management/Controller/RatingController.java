@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -26,7 +25,7 @@ public RatingController(RatingService ratingService){
     @PostMapping("/rateMovie")
     public ResponseEntity<String> addRating (@RequestBody RatingMovieResponse ratingMovieResponse){
 
-       if (ratingService.checkifUserRated(ratingMovieResponse)){
+       if (ratingService.checkIfUserRated(ratingMovieResponse)){
            return new ResponseEntity<>("this user already rated this movie",HttpStatus.BAD_REQUEST);
        }
        else if(!ratingService.checkIfMovieExist(ratingMovieResponse.getMovie_id())){
@@ -46,7 +45,7 @@ ratingService.rateMovie(ratingMovieResponse);
 
     @DeleteMapping("/deleteMovieRating")
     public ResponseEntity<String> deleteRating (@RequestBody RatingMovieResponse ratingMovieResponse){
-        if (ratingService.checkifUserRated(ratingMovieResponse)){
+        if (ratingService.checkIfUserRated(ratingMovieResponse)){
 
         ratingService.deleteRating(ratingMovieResponse);
         return new ResponseEntity<>("Successfully Deleted the Rating",HttpStatus.OK);

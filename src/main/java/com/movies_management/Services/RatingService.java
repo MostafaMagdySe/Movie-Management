@@ -51,7 +51,7 @@ public class RatingService {
         ratingRepo.save(ratingEntity);
 
     }
-    public boolean checkifUserRated(RatingMovieResponse ratingMovieResponse){
+    public boolean checkIfUserRated(RatingMovieResponse ratingMovieResponse){
         Users user =getUserInfo();
         return ratingRepo.existsByUserIdAndMovieId(user.getId(), ratingMovieResponse.getMovie_id());
 
@@ -60,7 +60,7 @@ public class RatingService {
     }
 
     public void deleteRating(RatingMovieResponse ratingMovieResponse){
-        if (checkifUserRated(ratingMovieResponse)){
+        if (checkIfUserRated(ratingMovieResponse)){
             Users user =getUserInfo();
      Rating ratingEntity = ratingRepo.findByUserIdAndMovieId(user.getId(), ratingMovieResponse.getMovie_id() );
             ratingRepo.delete(ratingEntity);
