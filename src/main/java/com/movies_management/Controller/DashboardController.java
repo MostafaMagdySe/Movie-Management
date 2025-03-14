@@ -1,7 +1,7 @@
 package com.movies_management.Controller;
 
 
-import com.movies_management.DTO.UsernameRequest;
+import com.movies_management.DTO.updateProfileRequest;
 import com.movies_management.DTO.LoginRequest;
 import com.movies_management.Entities.MovieInfo;
 import com.movies_management.Services.DashboardService;
@@ -67,11 +67,13 @@ public ResponseEntity<Map<String, Object>> viewMovie(@PathVariable String name){
     }
 
     @PatchMapping ("/updateProfile")
-    public ResponseEntity updateProfile(@RequestBody UsernameRequest username){
+    public ResponseEntity updateProfile(@RequestBody @Valid updateProfileRequest username){
 
-        userService.updateUserProfile(username);
+       if( userService.updateUserProfile(username)){
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 

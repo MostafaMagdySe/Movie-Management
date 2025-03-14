@@ -7,14 +7,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class UsernameRequest {
+public class updateProfileRequest {
     @NotNull
     private String username;
-    @NotNull @Email
+     @Email
     private String newEmail;
-    @NotNull
+
     private String phone;
-    @NotNull
+
     private String newUsername;
 
 }

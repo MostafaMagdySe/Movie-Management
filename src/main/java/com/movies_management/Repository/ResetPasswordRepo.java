@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ResetPasswordRepo extends JpaRepository<ResetPassword,Integer> {
     ResetPassword findByemail(String email);
+    boolean existsByemail(String email);
 }
 

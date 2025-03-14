@@ -1,7 +1,8 @@
 package com.movies_management.Services;
 
+import com.movies_management.Config.UserRoles;
 import com.movies_management.DTO.CreateUserResponse;
-import com.movies_management.DTO.UsernameRequest;
+import com.movies_management.DTO.updateProfileRequest;
 import com.movies_management.DTO.LoginRequest;
 import com.movies_management.Entities.Users;
 import com.movies_management.Repository.UserRepo;
@@ -9,6 +10,8 @@ import lombok.Data;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -53,25 +56,39 @@ public class UserService {
                     new UsernamePasswordAuthenticationToken(loginrequest.getUsername(), loginrequest.getPassword())
             );
 
-            // ✅ Fetch user details after authentication
+
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(loginrequest.getUsername());
 
-            // ✅ Generate token using UserDetails (includes roles)
+
             return jwtService.generateToken(userDetails);
         } catch (Exception e) {
             throw new BadCredentialsException("Invalid username or password");
         }
     }
+    public Users getUserInfo(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserRoles userRoles = (UserRoles) auth.getPrincipal();
+        String username = userRoles.getUsername();
+        return userRepo.findByusername(username);
 
+    }
 
     @Transactional
-    public void updateUserProfile (UsernameRequest username){
-        Users user;
-        user= userRepo.findByusername(username.getUsername());
-        user.setEmail(username.getNewEmail());
-        user.setUsername(username.getNewUsername());
-        user.setPhone(username.getPhone());
+    public boolean updateUserProfile (updateProfileRequest username){
+        Users currentUser= getUserInfo();
+        if (currentUser.getUsername().equals(username.getUsername())){
+        Users user= userRepo.findByusername(username.getUsername());
+        if(username.getNewEmail()!=null){
+        user.setEmail(username.getNewEmail());}
+        if(username.getNewUsername()!=null){
+        user.setUsername(username.getNewUsername());}
+        if(username.getPhone()!=null){
+        user.setPhone(username.getPhone());}
         userRepo.save(user);
+        return true;
+        }
+        return false;
+
     }
 
 

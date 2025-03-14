@@ -23,15 +23,23 @@ public class ForgotPasswordController {
 
     @PostMapping("/ResetPassword")
     public ResponseEntity ResetPassword(@RequestBody EmailResponse emailResponse) {
-        if (resetPasswordService.verifyEmail(emailResponse)) {
-            resetPasswordService.saveEmailAndCodeinDB(emailResponse);
-            resetPasswordService.sendmail(emailResponse);
-            return new ResponseEntity<>(HttpStatus.FOUND);
-        }
-        else
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-    }
+        if(resetPasswordService.verifyEmail(emailResponse)){
+        resetPasswordService.deleteCode(emailResponse.getEmail());}
+
+        if (!resetPasswordService.verifyEmail(emailResponse)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else if (resetPasswordService.codeHandlingInDB(emailResponse.getEmail())){
+            return new ResponseEntity<>(HttpStatus.TOO_MANY_REQUESTS);
+
+        }
+        else{
+
+        resetPasswordService.saveEmailAndCodeinDB(emailResponse);
+        resetPasswordService.sendmail(emailResponse);
+        return new ResponseEntity<>(HttpStatus.FOUND);
+    }}
     @PostMapping("/verifyCode")
     public ResponseEntity verifyCode(@RequestParam String email, @RequestBody UserProvidedcodeResponse userProvidedcodeResponse) {
         if(resetPasswordService.verifyCode(email, userProvidedcodeResponse.getCode())){

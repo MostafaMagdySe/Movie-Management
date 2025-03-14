@@ -14,6 +14,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+
+
+
 @Data
 @Service
 public class ResetPasswordService {
@@ -33,13 +37,13 @@ public class ResetPasswordService {
         return userRepo.findByemail(emailResponse.getEmail()) != null;
     }
 
-    //@EventListener(ApplicationReadyEvent.class)
+
     @Transactional
     public void sendmail(EmailResponse emailResponse){
         ResetPassword resetPassword = resetPasswordRepo.findByemail(emailResponse.getEmail());
         emailSenderService.SendEmail(emailResponse.getEmail(),
                 "Don't reply to this Message",
-                "you have Requested to reset Your password on our Notes Website.." +
+                "you have Requested to reset Your password on our Movies Website.." +
                         " if you didn't ask for Resetting Password, ignore this Message," +
                         " your Verification Code is: "+resetPassword.getCode());
 
@@ -64,10 +68,19 @@ public class ResetPasswordService {
 
 
     }
-    public void codeHandlingInDB (){
+    public boolean codeHandlingInDB (String email){
+        return resetPasswordRepo.existsByemail(email);
 
 
     }
+    public void deleteCode(String email){
+        ResetPassword resetPassword = resetPasswordRepo.findByemail(email);
+        Instant createdAt = resetPassword.getCreatedat();
+        Instant expiryTime = createdAt.plusSeconds(2 * 60);
+        if (expiryTime.isBefore(Instant.now())) {
+            resetPasswordRepo.delete(resetPassword);
+    }}
+
 
     public Boolean updateUserPassword(String email, UserNewPasswordRequest userNewPasswordRequest) {
 
