@@ -1,7 +1,5 @@
 package com.movies_management.Services;
 
-
-
 import com.movies_management.DTO.EmailResponse;
 import com.movies_management.DTO.UserNewPasswordRequest;
 import com.movies_management.Entities.ResetPassword;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 
 
-
 @Data
 @Service
 public class ResetPasswordService {
@@ -25,71 +22,85 @@ public class ResetPasswordService {
     private final UserRepo userRepo;
     private final EmailSenderService emailSenderService;
     private final ResetPasswordRepo resetPasswordRepo;
-    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-    public ResetPasswordService(UserRepo userRepo, EmailSenderService emailSenderService, ResetPasswordRepo resetPasswordRepo){
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-        this.userRepo=userRepo;
-        this.emailSenderService=emailSenderService;
+    public ResetPasswordService(UserRepo userRepo, EmailSenderService emailSenderService, ResetPasswordRepo resetPasswordRepo) {
+        this.userRepo = userRepo;
+        this.emailSenderService = emailSenderService;
         this.resetPasswordRepo = resetPasswordRepo;
     }
 
-    public Boolean verifyEmail (EmailResponse emailResponse){
+    public Boolean verifyEmail(EmailResponse emailResponse) {
         return userRepo.findByemail(emailResponse.getEmail()) != null;
     }
 
-
     @Transactional
-    public void sendmail(EmailResponse emailResponse){
+    public void sendmail(EmailResponse emailResponse) {
         ResetPassword resetPassword = resetPasswordRepo.findByemail(emailResponse.getEmail());
-        emailSenderService.SendEmail(emailResponse.getEmail(),
+
+        if (resetPassword == null) {
+            throw new IllegalArgumentException("No reset password entry found for email: " + emailResponse.getEmail());
+        }
+
+        emailSenderService.SendEmail(
+                emailResponse.getEmail(),
                 "Don't reply to this Message",
-                "you have Requested to reset Your password on our Movies Website.." +
-                        " if you didn't ask for Resetting Password, ignore this Message," +
-                        " your Verification Code is: "+resetPassword.getCode());
-
-
+                "You have requested to reset your password on our Movies Website. " +
+                        "If you didn't ask for a password reset, ignore this message. " +
+                        "Your Verification Code is: " + resetPassword.getCode()
+        );
     }
+
     @Transactional
-    public void saveEmailAndCodeinDB (EmailResponse emailResponse){
+    public void saveEmailAndCodeinDB(EmailResponse emailResponse) {
         ResetPassword resetPass = new ResetPassword();
         resetPass.setEmail(emailResponse.getEmail());
         resetPass.setCode(generateVerificationCode());
         resetPasswordRepo.save(resetPass);
     }
-    public String generateVerificationCode(){
 
+    public String generateVerificationCode() {
         return RandomStringUtils.randomAlphabetic(10);
     }
-    public boolean verifyCode(String email, String userProvidedCode) {
 
+    public boolean verifyCode(String email, String userProvidedCode) {
         ResetPassword resetPassword = resetPasswordRepo.findByemail(email);
+
+        if (resetPassword == null) {
+            return false;
+        }
 
         return resetPassword.getCode().equals(userProvidedCode);
-
-
     }
-    public boolean codeHandlingInDB (String email){
+
+    public boolean codeHandlingInDB(String email) {
         return resetPasswordRepo.existsByemail(email);
-
-
     }
-    public void deleteCode(String email){
+
+    @Transactional
+    public void deleteCode(String email) {
         ResetPassword resetPassword = resetPasswordRepo.findByemail(email);
+
+        if (resetPassword == null) {
+            return;
+        }
+
         Instant createdAt = resetPassword.getCreatedat();
-        Instant expiryTime = createdAt.plusSeconds(2 * 60);
+        Instant expiryTime = createdAt.plusSeconds(2 * 60); // Expiry in 2 minutes
+
         if (expiryTime.isBefore(Instant.now())) {
             resetPasswordRepo.delete(resetPassword);
-    }}
-
+        }
+    }
 
     public Boolean updateUserPassword(String email, UserNewPasswordRequest userNewPasswordRequest) {
-
         Users user = userRepo.findByemail(email);
+
         if (user == null) {
             return false;
         }
-        try {
 
+        try {
             user.setPassword(encoder.encode(userNewPasswordRequest.getPassword()));
             userRepo.save(user);
             return true;
@@ -98,22 +109,4 @@ public class ResetPasswordService {
             return false;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
-
