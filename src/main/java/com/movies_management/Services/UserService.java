@@ -91,6 +91,11 @@ public class UserService {
 
     }
 
+    public Users getUserProfile(String username){
+
+        return userRepo.findByusername(username);
+    }
+
 
 }
 

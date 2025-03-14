@@ -1,9 +1,12 @@
 package com.movies_management.Controller;
 
 
+import com.movies_management.DTO.EmailResponse;
+import com.movies_management.DTO.UserNameResponse;
 import com.movies_management.DTO.updateProfileRequest;
 import com.movies_management.DTO.LoginRequest;
 import com.movies_management.Entities.MovieInfo;
+import com.movies_management.Entities.Users;
 import com.movies_management.Services.DashboardService;
 import com.movies_management.Services.UserService;
 import jakarta.validation.Valid;
@@ -75,7 +78,11 @@ public ResponseEntity<Map<String, Object>> viewMovie(@PathVariable String name){
     }
     else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+    @GetMapping("/userProfile")
+    public ResponseEntity<Users> getProfile(@RequestBody UserNameResponse username){
+Users user=userService.getUserProfile(username.getUsername());
 
+        return new ResponseEntity<>(user,HttpStatus.OK);
 
-
+}
 }
