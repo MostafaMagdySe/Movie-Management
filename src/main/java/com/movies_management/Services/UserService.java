@@ -95,6 +95,11 @@ public class UserService {
 
         return userRepo.findByusername(username);
     }
+    public boolean checkIfUserExist(String username){
+       return userRepo.existsByusername(username);
+
+
+    }
 
 
 }
