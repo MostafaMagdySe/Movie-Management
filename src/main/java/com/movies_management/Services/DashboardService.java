@@ -47,6 +47,7 @@ return movieRepo.findAllByMovieInfo(pageable);
 
 
           movieMap.values().removeIf(Objects::isNull);
+
           return movieMap;
      }
 

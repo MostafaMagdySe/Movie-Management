@@ -9,6 +9,7 @@ import lombok.Data;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,15 +22,17 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
 
     private final UserRepo userRepo;
+    private final CustomUserDetailsService customUserDetailsService;
 
 
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-    public UserService(UserRepo userRepo, JWTService jwtService, AuthenticationManager authenticationManager)
+    public UserService(UserRepo userRepo, JWTService jwtService, AuthenticationManager authenticationManager,CustomUserDetailsService customUserDetailsService)
     {
         this.userRepo= userRepo;
         this.jwtService=jwtService;
         this.authenticationManager=authenticationManager;
+        this.customUserDetailsService=customUserDetailsService;
 
     }
     @Transactional
@@ -45,15 +48,22 @@ public class UserService {
 
     }
     public String verify(LoginRequest loginrequest) {
-
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginrequest.getUsername(), loginrequest.getPassword()));
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginrequest.getUsername(), loginrequest.getPassword())
+            );
 
-            return jwtService.generateToken(loginrequest.getUsername());}
-        catch (Exception e) {
+            // ✅ Fetch user details after authentication
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(loginrequest.getUsername());
+
+            // ✅ Generate token using UserDetails (includes roles)
+            return jwtService.generateToken(userDetails);
+        } catch (Exception e) {
             throw new BadCredentialsException("Invalid username or password");
         }
     }
+
+
     @Transactional
     public void updateUserProfile (UsernameRequest username){
         Users user;

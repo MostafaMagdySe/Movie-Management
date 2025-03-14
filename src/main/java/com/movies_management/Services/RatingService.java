@@ -1,6 +1,7 @@
 package com.movies_management.Services;
 
 import com.movies_management.Config.UserRoles;
+import com.movies_management.DTO.MovieReviewResponse;
 import com.movies_management.DTO.RatingMovieResponse;
 import com.movies_management.Entities.Rating;
 import com.movies_management.Entities.Users;
@@ -11,6 +12,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 public class RatingService {
@@ -40,7 +46,7 @@ public class RatingService {
         ratingEntity.setUser_id(user.getId());
         ratingEntity.setRating(ratingMovieResponse.getRating());
         ratingEntity.setComment(ratingMovieResponse.getComment());
-        ratingEntity.setMovie_id(ratingMovieResponse.getMovie_id());
+        ratingEntity.setMovieId(ratingMovieResponse.getMovie_id());
 
         ratingRepo.save(ratingEntity);
 
@@ -66,6 +72,29 @@ public class RatingService {
         return movieRepo.existsById(id);
 
     }
+
+public  List<MovieReviewResponse> getAllReviews(int movieId){
+    List<Rating> rating =ratingRepo.findByMovieId(movieId);
+
+    List<MovieReviewResponse> review = new ArrayList<>();
+
+
+    for (int i=0; i<rating.size();i++ ){
+        MovieReviewResponse movieReview = new MovieReviewResponse();
+        movieReview.setUsername(userRepo.findById(rating.get(i).getUser_id()).getUsername());
+        movieReview.setComment(rating.get(i).getComment());
+        movieReview.setRating(rating.get(i).getRating());
+        review.add(movieReview);
+
+
+    }
+
+       return review;
+
+}
+
+
+
 
 
 }

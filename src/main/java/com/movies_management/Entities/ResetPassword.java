@@ -9,6 +9,7 @@ import java.time.Instant;
 
 @Entity
 @Data
+@Table(name = "resetpassword")
 public class ResetPassword {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
