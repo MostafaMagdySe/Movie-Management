@@ -1,3 +1,13 @@
+CREATE TABLE public.roles (
+                              id SERIAL PRIMARY KEY,
+                              role VARCHAR(20) NOT NULL UNIQUE
+);
+
+
+INSERT INTO public.roles (role) VALUES ('Admin'), ('User');
+
+
+
 CREATE TABLE public.users (
                               id SERIAL PRIMARY KEY,
                               username VARCHAR(20) NOT NULL UNIQUE,
@@ -54,7 +64,3 @@ CREATE TABLE public.resetpassword (
                                       createdat TIMESTAMP
 );
 
-CREATE TABLE public.roles (
-                              id SERIAL PRIMARY KEY,
-                              role VARCHAR(20) NOT NULL UNIQUE
-);
